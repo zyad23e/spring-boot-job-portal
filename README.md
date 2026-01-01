@@ -45,12 +45,17 @@ The application follows a standard layered architecture:
 
 ## Progress
 
-- [ ] Project scaffolding and configuration  
-- [ ] MVC controllers and view templates  
-- [ ] Authentication and authorization  
-- [ ] Job entity modeling and persistence  
-- [ ] CRUD workflows for job listings  
-- [ ] Security hardening and validation  
+- [ ] Section 1 - Spring Boot 4 Project - Introduction
+- [ ] Section 2 - Spring Boot 4 Project - Overview
+- [ ] Section 3 - Registration
+- [ ] Section 4 - Security: Login / Logout
+- [ ] Section 5 - Recruiter Profile
+- [ ] Section 6 - Recruiter - Post New Job
+- [ ] Section 7 - Recruiter Dashboard
+- [ ] Section 8 - Job Candidate Profile
+- [ ] Section 9 - Job Candidate Dashboard and Apply for Job
+- [ ] Section 10 - Job Candidate - Save a Job
+- [ ] Section 11 - Recruiter - Download Candidate Resume
 
 (Progress will be updated as features are implemented.)
 
