@@ -46,7 +46,7 @@ The application follows a standard layered architecture:
 ## Progress
 
 - [✅] Section 1 - Spring Boot 4 Project - Introduction
-- [ ] Section 2 - Spring Boot 4 Project - Overview
+- [✅] Section 2 - Spring Boot 4 Project - Overview
 - [ ] Section 3 - Registration
 - [ ] Section 4 - Security: Login / Logout
 - [ ] Section 5 - Recruiter Profile
