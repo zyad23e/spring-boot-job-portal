@@ -21,14 +21,17 @@ public class Users {
 
     private boolean isActive;
 
+    // must NOT be empty AND must NOT be null. stops bad input before it reaches database.
     @NotEmpty
     private String password;
 
+    // informs Spring how to convert string into Date object
     @DateTimeFormat(pattern = "dd-MM-yyyy")
     private Date registrationDate;
 
+    // many users can have one usertype
     @ManyToOne(cascade = CascadeType.ALL)
-    // name field here is saying in the USERS table there is a field named userTypeId
+    // name field here is saying in the USERS table there is a field named userTypeId, referencedColumnName is the column name in the other table(UsersType table)
     @JoinColumn(name = "userTypeId", referencedColumnName = "userTypeId")
     private UsersType userTypeId;
 
