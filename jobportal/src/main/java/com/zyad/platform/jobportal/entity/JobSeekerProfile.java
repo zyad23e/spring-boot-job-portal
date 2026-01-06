@@ -16,19 +16,19 @@ public class JobSeekerProfile {
     @MapsId
     private Users userId;
 
-    private String city;
-    private String country;
-    private String employmentType;
     private String firstName;
     private String lastName;
-    private String resume;
+    private String city;
     private String state;
+    private String country;
     private String workAuthorization;
+    private String employmentType;
+    private String resume;
 
     @Column(nullable = true, length = 64)
     private String profilePhoto;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "jobSeekerProfile")
+    @OneToMany(targetEntity = Skills.class, cascade = CascadeType.ALL, mappedBy = "jobSeekerProfile")
     private List<Skills> skills;
 
     public JobSeekerProfile() {
@@ -38,17 +38,17 @@ public class JobSeekerProfile {
         this.userId = userId;
     }
 
-    public JobSeekerProfile(int userAccountId, Users userId, String city, String country, String employmentType, String firstName, String lastName, String resume, String state, String workAuthorization, String profilePhoto, List<Skills> skills) {
+    public JobSeekerProfile(int userAccountId, Users userId, String firstName, String lastName, String city, String state, String country, String workAuthorization, String employmentType, String resume, String profilePhoto, List<Skills> skills) {
         this.userAccountId = userAccountId;
         this.userId = userId;
-        this.city = city;
-        this.country = country;
-        this.employmentType = employmentType;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.resume = resume;
+        this.city = city;
         this.state = state;
+        this.country = country;
         this.workAuthorization = workAuthorization;
+        this.employmentType = employmentType;
+        this.resume = resume;
         this.profilePhoto = profilePhoto;
         this.skills = skills;
     }
@@ -69,30 +69,6 @@ public class JobSeekerProfile {
         this.userId = userId;
     }
 
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public String getEmploymentType() {
-        return employmentType;
-    }
-
-    public void setEmploymentType(String employmentType) {
-        this.employmentType = employmentType;
-    }
-
     public String getFirstName() {
         return firstName;
     }
@@ -109,12 +85,12 @@ public class JobSeekerProfile {
         this.lastName = lastName;
     }
 
-    public String getResume() {
-        return resume;
+    public String getCity() {
+        return city;
     }
 
-    public void setResume(String resume) {
-        this.resume = resume;
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public String getState() {
@@ -125,12 +101,36 @@ public class JobSeekerProfile {
         this.state = state;
     }
 
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
     public String getWorkAuthorization() {
         return workAuthorization;
     }
 
     public void setWorkAuthorization(String workAuthorization) {
         this.workAuthorization = workAuthorization;
+    }
+
+    public String getEmploymentType() {
+        return employmentType;
+    }
+
+    public void setEmploymentType(String employmentType) {
+        this.employmentType = employmentType;
+    }
+
+    public String getResume() {
+        return resume;
+    }
+
+    public void setResume(String resume) {
+        this.resume = resume;
     }
 
     public String getProfilePhoto() {
@@ -154,14 +154,14 @@ public class JobSeekerProfile {
         return "JobSeekerProfile{" +
                 "userAccountId=" + userAccountId +
                 ", userId=" + userId +
-                ", city='" + city + '\'' +
-                ", country='" + country + '\'' +
-                ", employmentType='" + employmentType + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", resume='" + resume + '\'' +
+                ", city='" + city + '\'' +
                 ", state='" + state + '\'' +
+                ", country='" + country + '\'' +
                 ", workAuthorization='" + workAuthorization + '\'' +
+                ", employmentType='" + employmentType + '\'' +
+                ", resume='" + resume + '\'' +
                 ", profilePhoto='" + profilePhoto + '\'' +
                 ", skills=" + skills +
                 '}';

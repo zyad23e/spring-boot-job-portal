@@ -14,28 +14,36 @@ public class RecruiterProfile {
     @MapsId
     private Users userId;
 
-    private String city;
-    private String company;
     private String firstName;
     private String lastName;
+    private String city;
+
     private String state;
+
+    private String country;
+
+    private String company;
 
     @Column(nullable = true, length = 64)
     private String profilePhoto;
 
-    public RecruiterProfile(Users users) {
-        this.userId = users;
+    public RecruiterProfile() {
     }
 
-    public RecruiterProfile(int userAccountId, Users userId, String city, String company, String firstName, String lastName, String profilePhoto, String state) {
+    public RecruiterProfile(int userAccountId, Users userId, String firstName, String lastName, String city, String state, String country, String company, String profilePhoto) {
         this.userAccountId = userAccountId;
         this.userId = userId;
-        this.city = city;
-        this.company = company;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.profilePhoto = profilePhoto;
+        this.city = city;
         this.state = state;
+        this.country = country;
+        this.company = company;
+        this.profilePhoto = profilePhoto;
+    }
+
+    public RecruiterProfile(Users users) {
+        this.userId = users;
     }
 
     public int getUserAccountId() {
@@ -54,22 +62,6 @@ public class RecruiterProfile {
         this.userId = userId;
     }
 
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getCompany() {
-        return company;
-    }
-
-    public void setCompany(String company) {
-        this.company = company;
-    }
-
     public String getFirstName() {
         return firstName;
     }
@@ -86,12 +78,12 @@ public class RecruiterProfile {
         this.lastName = lastName;
     }
 
-    public String getProfilePhoto() {
-        return profilePhoto;
+    public String getCity() {
+        return city;
     }
 
-    public void setProfilePhoto(String profilePhoto) {
-        this.profilePhoto = profilePhoto;
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public String getState() {
@@ -102,17 +94,42 @@ public class RecruiterProfile {
         this.state = state;
     }
 
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public String getProfilePhoto() {
+        return profilePhoto;
+    }
+
+    public void setProfilePhoto(String profilePhoto) {
+        this.profilePhoto = profilePhoto;
+    }
+
     @Override
     public String toString() {
         return "RecruiterProfile{" +
                 "userAccountId=" + userAccountId +
                 ", userId=" + userId +
-                ", city='" + city + '\'' +
-                ", company='" + company + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", profilePhoto='" + profilePhoto + '\'' +
+                ", city='" + city + '\'' +
                 ", state='" + state + '\'' +
+                ", country='" + country + '\'' +
+                ", company='" + company + '\'' +
+                ", profilePhoto='" + profilePhoto + '\'' +
                 '}';
     }
 }

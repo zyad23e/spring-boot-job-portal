@@ -9,21 +9,21 @@ import java.util.List;
 public class UsersType {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userTypeId;
 
     private String userTypeName;
 
-    @OneToMany(mappedBy = "userTypeId", cascade = CascadeType.ALL)
+    @OneToMany(targetEntity = Users.class, mappedBy = "userTypeId", cascade = CascadeType.ALL)
     private List<Users> users;
 
     public UsersType() {
     }
 
-    public UsersType(int userTypeId, List<Users> users, String userTypeName) {
+    public UsersType(int userTypeId, String userTypeName, List<Users> users) {
         this.userTypeId = userTypeId;
-        this.users = users;
         this.userTypeName = userTypeName;
+        this.users = users;
     }
 
     public int getUserTypeId() {

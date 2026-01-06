@@ -4,8 +4,13 @@ import com.zyad.platform.jobportal.entity.Users;
 import com.zyad.platform.jobportal.entity.UsersType;
 import com.zyad.platform.jobportal.services.UsersService;
 import com.zyad.platform.jobportal.services.UsersTypeService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,32 +32,41 @@ public class UsersController {
     }
 
     @GetMapping("/register")
-    public String register(Model model){
-        List<UsersType> userTypes = usersTypeService.getAll();
-
-        // the HTML view can now access the list of userTypes using the name 'getAllTypes'
-        model.addAttribute("getAllTypes", userTypes);
-
-        // give the HTML page a blank Users object to bind form fields to using the name 'user'
+    public String register(Model model) {
+        List<UsersType> usersTypes = usersTypeService.getAll();
+        model.addAttribute("getAllTypes", usersTypes);
         model.addAttribute("user", new Users());
         return "register";
-
     }
 
-    // @Valid means before this method runs, check that this object's field satisfies the validation rules.
     @PostMapping("/register/new")
-    public String userRegistration(@Valid Users users, Model model){
+    public String userRegistration(@Valid Users users, Model model) {
         Optional<Users> optionalUsers = usersService.getUserByEmail(users.getEmail());
-
-        if (optionalUsers.isPresent()){
-            model.addAttribute("error", "Email already registered, try to login or register with another email.");
-            List<UsersType> userTypes = usersTypeService.getAll();
-            model.addAttribute("getAllTypes", userTypes);
+        if (optionalUsers.isPresent()) {
+            model.addAttribute("error", "Email already registered,try to login or register with other email.");
+            List<UsersType> usersTypes = usersTypeService.getAll();
+            model.addAttribute("getAllTypes", usersTypes);
             model.addAttribute("user", new Users());
             return "register";
         }
-
         usersService.addNew(users);
-        return "dashboard";
+        return "redirect:/dashboard/";
+    }
+
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null) {
+            new SecurityContextLogoutHandler().logout(request, response, authentication);
+        }
+
+        return "redirect:/";
     }
 }
