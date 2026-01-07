@@ -42,14 +42,16 @@ public class RecruiterProfileController {
         //                                                                .getAuthentication -> gives all info about the current user.
         //             authentication now stores a reference to the authentication object (user details)
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         // only run the profile-loading logic if the user is actually logged in. makes sure if the "/recruiter-profile" endpoint is hit without a logged in user it doesnt work
         if (!(authentication instanceof AnonymousAuthenticationToken)){
             String currentUsername = authentication.getName();
+
             // find current logged in user by email and store all the users info in users variable, if email not found then throw an exception.
             Users users = usersRepository.findByEmail(currentUsername).orElseThrow(() -> new UsernameNotFoundException("Could not find user."));
             Optional<RecruiterProfile> recruiterProfile = recruiterProfileService.getOne(users.getUserId());
 
-            if (recruiterProfile.isEmpty()){
+            if (!recruiterProfile.isEmpty()){
                 model.addAttribute("profile", recruiterProfile.get());
             }
         }
