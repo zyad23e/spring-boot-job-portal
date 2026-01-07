@@ -1,12 +1,15 @@
 package com.zyad.platform.jobportal.controller;
 
 import com.zyad.platform.jobportal.entity.JobPostActivity;
+import com.zyad.platform.jobportal.entity.RecruiterJobsDto;
+import com.zyad.platform.jobportal.entity.RecruiterProfile;
 import com.zyad.platform.jobportal.entity.Users;
 import com.zyad.platform.jobportal.services.JobPostActivityService;
 import com.zyad.platform.jobportal.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import java.security.Security;
 import java.util.Date;
+import java.util.List;
 
 @Controller
 public class JobPostActivityController {
@@ -37,6 +41,12 @@ public class JobPostActivityController {
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             String currentUsername = authentication.getName();
             model.addAttribute("username", currentUsername);
+
+            // checks if logged in user has "recruiter" role
+            if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("Recruiter"))){
+                List<RecruiterJobsDto> recruiterJobs = jobPostActivityService.getRecruiterJobs(((RecruiterProfile)currentUserProfile).getUserAccountId());
+                model.addAttribute("jobPost", recruiterJobs);
+            }
         }
 
         model.addAttribute("user", currentUserProfile);
@@ -63,4 +73,6 @@ public class JobPostActivityController {
         JobPostActivity saved = jobPostActivityService.addNew(jobPostActivity);
         return "redirect:/dashboard/";
     }
+
+
 }
