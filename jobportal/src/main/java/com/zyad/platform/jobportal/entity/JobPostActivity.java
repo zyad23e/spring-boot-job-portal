@@ -22,7 +22,7 @@ public class JobPostActivity {
     @ManyToOne(cascade = CascadeType.ALL)
     //                                  referencedColumnName references the id inside the job_location table
     @JoinColumn(name = "jobLocationId", referencedColumnName = "Id")
-    private JobLocation jobLocation;
+    private JobLocation jobLocationId;
 
     @ManyToOne(cascade = CascadeType.ALL)
     //                                 referencedColumnName references the id inside the job_company table
@@ -49,7 +49,7 @@ public class JobPostActivity {
     public JobPostActivity() {
     }
 
-    public JobPostActivity(Integer jobPostId, Date postedDate, String salary, String remote, String jobType, String jobTitle, String descriptionOfJob, Boolean isSaved, Boolean isActive, JobCompany jobCompanyId, JobLocation jobLocation, Users postedById) {
+    public JobPostActivity(Integer jobPostId, Date postedDate, String salary, String remote, String jobType, String jobTitle, String descriptionOfJob, Boolean isSaved, Boolean isActive, JobCompany jobCompanyId, JobLocation jobLocationId, Users postedById) {
         this.jobPostId = jobPostId;
         this.postedDate = postedDate;
         this.salary = salary;
@@ -60,7 +60,7 @@ public class JobPostActivity {
         this.isSaved = isSaved;
         this.isActive = isActive;
         this.jobCompanyId = jobCompanyId;
-        this.jobLocation = jobLocation;
+        this.jobLocationId = jobLocationId;
         this.postedById = postedById;
     }
 
@@ -80,12 +80,12 @@ public class JobPostActivity {
         this.postedById = postedById;
     }
 
-    public JobLocation getJobLocation() {
-        return jobLocation;
+    public JobLocation getJobLocationId() {
+        return jobLocationId;
     }
 
-    public void setJobLocation(JobLocation jobLocation) {
-        this.jobLocation = jobLocation;
+    public void setJobLocationId(JobLocation jobLocationId) {
+        this.jobLocationId = jobLocationId;
     }
 
     public JobCompany getJobCompanyId() {
@@ -165,7 +165,7 @@ public class JobPostActivity {
         return "JobPostActivity{" +
                 "jobPostId=" + jobPostId +
                 ", postedById=" + postedById +
-                ", jobLocation=" + jobLocation +
+                ", jobLocation=" + jobLocationId +
                 ", jobCompanyId=" + jobCompanyId +
                 ", isActive=" + isActive +
                 ", isSaved=" + isSaved +
