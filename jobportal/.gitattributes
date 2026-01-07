@@ -1,2 +1,14 @@
 /mvnw text eol=lf
 *.cmd text eol=crlf
+
+# --- GitHub Linguist configuration ---
+# Ignore bundled/static frontend assets so this repo
+# is classified correctly as a Java backend project
+
+src/main/resources/static/** linguist-vendored
+src/main/resources/public/** linguist-vendored
+**/*.min.js linguist-vendored
+**/*.min.css linguist-vendored
+**/vendor/** linguist-vendored
+**/dist/** linguist-vendored
+**/build/** linguist-vendored
