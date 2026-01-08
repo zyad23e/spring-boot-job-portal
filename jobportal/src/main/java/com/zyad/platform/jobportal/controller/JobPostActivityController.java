@@ -3,6 +3,7 @@ package com.zyad.platform.jobportal.controller;
 import com.zyad.platform.jobportal.entity.*;
 import com.zyad.platform.jobportal.services.JobPostActivityService;
 import com.zyad.platform.jobportal.services.JobSeekerApplyService;
+import com.zyad.platform.jobportal.services.JobSeekerSaveService;
 import com.zyad.platform.jobportal.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -29,12 +30,14 @@ public class JobPostActivityController {
     private final UsersService usersService;
     private final JobPostActivityService jobPostActivityService;
     private final JobSeekerApplyService jobSeekerApplyService;
+    private final JobSeekerSaveService jobSeekerSaveService;
 
     @Autowired
-    public JobPostActivityController(UsersService usersService, JobPostActivityService jobPostActivityService, JobSeekerApplyService jobSeekerApplyService) {
+    public JobPostActivityController(UsersService usersService, JobPostActivityService jobPostActivityService, JobSeekerApplyService jobSeekerApplyService, JobSeekerSaveService jobSeekerSaveService) {
         this.usersService = usersService;
         this.jobPostActivityService = jobPostActivityService;
         this.jobSeekerApplyService = jobSeekerApplyService;
+        this.jobSeekerSaveService = jobSeekerSaveService;
     }
 
     @GetMapping("/dashboard/")
@@ -101,9 +104,6 @@ public class JobPostActivityController {
                     Arrays.asList(remoteOnly, officeOnly, partialRemote), searchDate);
         }
 
-
-
-
         Object currentUserProfile = usersService.getCurrentUserProfile();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -117,6 +117,36 @@ public class JobPostActivityController {
                 model.addAttribute("jobPost", recruiterJobs);
             } else {
                 List<JobSeekerApply> jobSeekerApplyList = jobSeekerApplyService.getCandidatesJobs((JobSeekerProfile) currentUserProfile);
+                List<JobSeekerSave> jobSeekerSaveList = jobSeekerSaveService.getCandidatesJob((JobSeekerProfile) currentUserProfile);
+
+                boolean exist;
+                boolean saved;
+
+                for (JobPostActivity jobPostActivity: jobPost){
+                    exist = false;
+                    saved = false;
+                    for (JobSeekerApply jobSeekerApply: jobSeekerApplyList){
+                        if (Objects.equals(jobPostActivity.getJobPostId(), jobSeekerApply.getJob().getJobPostId())){
+                            jobPostActivity.setIsActive(true);
+                            exist = true;
+                            break;
+                        }
+                    } for (JobSeekerSave jobSeekerSave: jobSeekerSaveList){
+                        if (Objects.equals(jobPostActivity.getJobPostId(), jobSeekerSave.getJob().getJobPostId())){
+                            jobPostActivity.setIsSaved(true);
+                            saved=true;
+                            break;
+                        }
+                    }
+
+                    if(!exist){
+                        jobPostActivity.setIsActive(false);
+                    } if (!saved){
+                        jobPostActivity.setIsSaved(false);
+                    }
+
+                    model.addAttribute("jobPost", jobPost);
+                }
             }
         }
 
@@ -153,6 +183,4 @@ public class JobPostActivityController {
         return "add-jobs";
 
     }
-
-
 }

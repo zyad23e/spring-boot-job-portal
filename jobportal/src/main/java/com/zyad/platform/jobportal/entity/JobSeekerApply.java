@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name = "job_seeker_apply", uniqueConstraints = {@UniqueConstraint(columnNames = {"userId", "job"})})
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"userId", "job"})})
 public class JobSeekerApply implements Serializable {
 
     @Id
@@ -18,6 +18,7 @@ public class JobSeekerApply implements Serializable {
     @JoinColumn(name = "userId", referencedColumnName = "user_account_id")
     private JobSeekerProfile userId;
 
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "job", referencedColumnName = "jobPostId")
     private JobPostActivity job;
 
