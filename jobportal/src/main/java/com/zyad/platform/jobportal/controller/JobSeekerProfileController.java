@@ -5,17 +5,24 @@ import com.zyad.platform.jobportal.entity.Skills;
 import com.zyad.platform.jobportal.entity.Users;
 import com.zyad.platform.jobportal.repository.UsersRepository;
 import com.zyad.platform.jobportal.services.JobSeekerProfileService;
+import com.zyad.platform.jobportal.util.FileUploadUtil;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Controller
@@ -52,5 +59,54 @@ public class JobSeekerProfileController {
         }
 
         return "job-seeker-profile";
+    }
+
+    @PostMapping("/addNew")
+    public String addNew(JobSeekerProfile jobSeekerProfile, @RequestParam("image")MultipartFile image, @RequestParam("pdf") MultipartFile pdf, Model model){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)){
+            Users user = usersRepository.findByEmail(authentication.getName()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            jobSeekerProfile.setUserId(user);
+            jobSeekerProfile.setUserAccountId(user.getUserId());
+        }
+
+        List<Skills> skillsList = new ArrayList<>();
+        model.addAttribute("profile", jobSeekerProfile);
+        model.addAttribute("skills", skillsList);
+
+        for (Skills skills: jobSeekerProfile.getSkills()){
+            skills.setJobSeekerProfile(jobSeekerProfile);
+        }
+
+        String imageName = "";
+        String resumeName = "";
+
+        // for handling profile photo
+        if (!(Objects.equals(image.getOriginalFilename(), ""))){
+            imageName = StringUtils.cleanPath(Objects.requireNonNull(image.getOriginalFilename()));
+            jobSeekerProfile.setProfilePhoto(imageName);
+        }
+
+        // for handling resume
+        if (!(Objects.equals(pdf.getOriginalFilename(), ""))){
+            resumeName = StringUtils.cleanPath(Objects.requireNonNull(pdf.getOriginalFilename()));
+            jobSeekerProfile.setResume(resumeName);
+        }
+
+        JobSeekerProfile seekerProfile = jobSeekerProfileService.addNew(jobSeekerProfile);
+
+        try {
+            String uploadDir = "photos/candidate/" + jobSeekerProfile.getUserAccountId();
+            if (!Objects.equals(image.getOriginalFilename(), "")){
+                FileUploadUtil.saveFile(uploadDir, imageName, image);
+            }
+            if (!Objects.equals(pdf.getOriginalFilename(), "")){
+                FileUploadUtil.saveFile(uploadDir, resumeName, pdf);
+            }
+        } catch (IOException e){
+            throw new RuntimeException(e);
+        }
+
+        return "redirect:/dashboard/";
     }
 }
