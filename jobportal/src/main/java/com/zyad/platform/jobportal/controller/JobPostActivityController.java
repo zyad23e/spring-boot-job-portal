@@ -251,4 +251,22 @@ public class JobPostActivityController {
         return "global-search";
 
     }
+
+
+    @PostMapping("dashboard/deleteJob/{id}")
+    public String deleteJobPost(@PathVariable("id") int id){
+        Users currentUser = usersService.getCurrentUser();
+        if (currentUser == null){
+            return "redirect:/dashboard/";
+        }
+
+        JobPostActivity jobPostActivity = jobPostActivityService.getOne(id);
+        if (jobPostActivity.getPostedById() == null || jobPostActivity.getPostedById().getUserId() != currentUser.getUserId()){
+            // Not the owner (or bad data) -> do nothing
+            return "redirect:/dashboard/";
+        }
+
+        jobPostActivityService.deleteJobPost(jobPostActivity);
+        return "redirect:/dashboard/";
+    }
 }

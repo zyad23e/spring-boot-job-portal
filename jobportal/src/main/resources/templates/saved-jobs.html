@@ -86,30 +86,27 @@
         <div class="box mt-3">
             <label class="large-label px-3 mb-3">Results</label>
             <th:block th:each="jobPost:${jobPost}">
-                <a th:href="@{/job-details-apply/{id}(id=${jobPost.jobPostId})}"
-                   style=" text-decoration:none; color:black;">
-                    <div onclick="window.location=/job-details-apply/{id}(id=${jobPost.jobPostId})" class="job-row">
-                        <div class="row ">
-                            <div class="col-md-4">
+                <div class="job-row">
+                    <div class="row align-items-center">
+                        <div class="col-md-9">
+                            <a th:href="@{/job-details-apply/{id}(id=${jobPost.jobPostId})}" style="text-decoration:none; color:black;">
                                 <label class="job-title text-left">
                                     [[${jobPost.jobTitle}]]
-                                    <span class="title-span" sec:authorize="hasAuthority('Recruiter')"
-                                          th:text="'('+ @{${jobPost.totalCandidates}}+' Candidates Applied)'">(xx candidates applied)</span>
-                                    <span class="title-span" sec:authorize="hasAuthority('Job Seeker')"
-                                          th:if="${jobPost.isActive == true}">(Applied)</span>
-
                                 </label>
-                            </div>
-                            <div class="col-md-4 text-center">
-                                <label th:text="${jobPost.jobLocationId.city+', '+ jobPost.jobLocationId.state}">
-                                    City State</label>
-                            </div>
-                            <div class="col-md-4 text-right">
-                                <label th:text="@{${jobPost.jobCompanyId.name}}">Recruiter Company Name</label>
-                            </div>
+                                <div>
+                                    <span th:text="${jobPost.jobLocationId.city+', '+ jobPost.jobLocationId.state}"></span>
+                                    <span> • </span>
+                                    <span th:text="@{${jobPost.jobCompanyId.name}}"></span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-3 text-end">
+                            <form th:action="@{/saved-jobs/remove/{id}(id=${jobPost.jobPostId})}" method="post">
+                                <button class="btn-sec btn-black w-100" type="submit">Remove</button>
+                            </form>
                         </div>
                     </div>
-                </a>
+                </div>
             </th:block>
         </div>
 

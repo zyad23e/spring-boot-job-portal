@@ -68,4 +68,25 @@ public class JobSeekerSaveController {
 
         return "saved-jobs";
     }
+
+
+    @PostMapping("saved-jobs/remove/{id}")
+    public String removeSaved(@PathVariable("id") int id){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication instanceof AnonymousAuthenticationToken){
+            return "redirect:/saved-jobs/";
+        }
+
+        String currentUsername = authentication.getName();
+        Users users = usersService.findByEmail(currentUsername);
+        Optional<JobSeekerProfile> seekerProfile = jobSeekerProfileService.getOne(users.getUserId());
+        if (seekerProfile.isEmpty()){
+            return "redirect:/saved-jobs/";
+        }
+
+        JobPostActivity jobPostActivity = jobPostActivityService.getOne(id);
+        jobSeekerSaveService.removeSavedJob(seekerProfile.get(), jobPostActivity);
+        // UX: after removing a saved job, take the user back to their dashboard
+        return "redirect:/dashboard/";
+    }
 }

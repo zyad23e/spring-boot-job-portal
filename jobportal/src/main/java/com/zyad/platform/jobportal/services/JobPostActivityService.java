@@ -5,6 +5,8 @@ import com.zyad.platform.jobportal.repository.JobPostActivityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +16,16 @@ import java.util.Objects;
 public class JobPostActivityService {
 
     private final JobPostActivityRepository jobPostActivityRepository;
+    private final JobSeekerApplyService jobSeekerApplyService;
+    private final JobSeekerSaveService jobSeekerSaveService;
 
     @Autowired
-    public JobPostActivityService(JobPostActivityRepository jobPostActivityRepository) {
+    public JobPostActivityService(JobPostActivityRepository jobPostActivityRepository,
+                                 JobSeekerApplyService jobSeekerApplyService,
+                                 JobSeekerSaveService jobSeekerSaveService) {
         this.jobPostActivityRepository = jobPostActivityRepository;
+        this.jobSeekerApplyService = jobSeekerApplyService;
+        this.jobSeekerSaveService = jobSeekerSaveService;
     }
 
     public List<JobPostActivity> search(String job, String location, List<String> type, List<String> remote, LocalDate searchDate) {
@@ -47,4 +55,33 @@ public class JobPostActivityService {
     public List<JobPostActivity> getAll() {
         return jobPostActivityRepository.findAll();
     }
+
+
+    @Transactional
+    public void deleteJobPost(JobPostActivity jobPostActivity){
+        // Delete dependent rows first to avoid FK issues
+        jobSeekerApplyService.removeAllApplicationsForJob(jobPostActivity);
+        jobSeekerSaveService.removeAllSavedForJob(jobPostActivity);
+        jobPostActivityRepository.delete(jobPostActivity);
+    }
+
+
+    /**
+     * Deletes a job post owned by the given recruiter.
+     * Also deletes dependent JobSeekerApply and JobSeekerSave rows to avoid FK constraint issues.
+     */
+    @Transactional
+    public void deleteJobAsRecruiter(int jobPostId, int recruiterUserId) {
+        JobPostActivity job = getOne(jobPostId);
+        if (job.getPostedById() == null || job.getPostedById().getUserId() != recruiterUserId) {
+            throw new RuntimeException("You are not authorized to delete this job");
+        }
+
+        // Remove dependent rows first
+        jobSeekerApplyService.removeAllApplicationsForJob(job);
+        jobSeekerSaveService.removeAllSavedForJob(job);
+
+        jobPostActivityRepository.delete(job);
+    }
+
 }

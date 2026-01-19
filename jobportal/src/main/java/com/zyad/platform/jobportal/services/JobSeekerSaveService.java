@@ -27,4 +27,13 @@ public class JobSeekerSaveService {
     public void addNew(JobSeekerSave jobSeekerSave) {
         jobSeekerSaveRepository.save(jobSeekerSave);
     }
+
+
+    public void removeSavedJob(JobSeekerProfile user, JobPostActivity job){
+        jobSeekerSaveRepository.deleteByUserIdAndJob(user, job);
+    }
+
+    public void removeAllSavedForJob(JobPostActivity job){
+        jobSeekerSaveRepository.deleteByJob(job);
+    }
 }
