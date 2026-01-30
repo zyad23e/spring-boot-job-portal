@@ -1,4 +1,4 @@
-# Spring Boot Job Portal
+# Spring Boot Career Portal
 
 Live Demo: http://job-portal-env.eba-g3y2ufbh.us-west-1.elasticbeanstalk.com/
 
