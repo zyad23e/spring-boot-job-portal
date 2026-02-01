@@ -1,6 +1,7 @@
 # Spring Boot Career Portal
 
-Live Demo: http://job-portal-env.eba-g3y2ufbh.us-west-1.elasticbeanstalk.com/
+Live Demo: http://careerportal.click/
+
 
 A full-stack Spring Boot web application implementing a job portal using Spring MVC, Thymeleaf, Spring Security, and JPA/Hibernate with MySQL persistence.
 
